@@ -76,16 +76,24 @@ void inputLoop(void * pvParameters){ // odczytywanie z joystick'a
     int y = analogRead(URY);
 
     if(x >= 0 && x <= 4095 && y == 4095){
-      d = 1;
+      if(d != 2){
+        d = 1;
+      }
     }
     else if(x >= 0 && x <= 4095 && y == 0){
-      d = 2;
+      if(d != 1 && d != 0){
+        d = 2;
+      }
     }
     else if(y >= 0 && y <= 4095 && x == 0){
-      d = 3;
+      if(d != 4){
+        d = 3;
+      }
     }
     else if(y >= 0 && y <= 4095 && x == 4095){
-      d = 4;
+      if(d != 3){
+        d = 4;
+      }
     }
 
     // Serial.println("[InputLoop Task] > Loop");
@@ -148,17 +156,25 @@ void createApple(){
 
 // koniec gry
 void gameOver(){
-  delay(1000);
+  delay(200);
+
+  led.clearDisplay(0);
+
+  for(int i = 7; i >= 0; i--){
+    led.setRow(0, i, B11111111);
+    delay(100);
+    led.setRow(0, i, B00000000);
+  }
 
   // reset głowy
   head.col = 4;
-  head.row = 4;
+  head.row = 5;
 
   // reset ciała
   body[0].col = 4;
-  body[0].row = 4;
+  body[0].row = 5;
   body[1].col = 4;
-  body[1].row = 5;
+  body[1].row = 4;
   for(int i = 2; i < 63; i++){
     body[i].col = -1;
     body[i].row = -1;
@@ -197,12 +213,14 @@ void gameLoop(void * pvParameters){ // logika gry oraz wyświetlanie
     // sprawdzanie kolizji z ścianą
     if(head.row == -1 || head.row == 8 || head.col == -1 || head.col == 8){
       gameOver();
+      continue;
     }
 
     // sprawdzanie kolizji z ciałem
     for(int i = 0; i < len; i++){
       if(head.row == body[i].row && head.col == body[i].col){
         gameOver();
+        continue;
       }
     }
 
@@ -216,6 +234,12 @@ void gameLoop(void * pvParameters){ // logika gry oraz wyświetlanie
         body[i - 1].col = body[i].col;
         body[i - 1].row = body[i].row;
       }
+    }
+
+    // sprawdzanie konca gry - aka wygranie
+    if(len == 64){
+      gameOver();
+      continue;
     }
 
     body[len - 1].col = head.col;
@@ -251,13 +275,13 @@ void setup() {
 
   // pierwsze ustawienie głowy
   head.col = 4;
-  head.row = 4;
+  head.row = 5;
 
   // pierwsze ustawienie ciała
   body[0].col = 4;
-  body[0].row = 4;
+  body[0].row = 5;
   body[1].col = 4;
-  body[1].row = 5;
+  body[1].row = 4;
 }
 
 void loop() {
