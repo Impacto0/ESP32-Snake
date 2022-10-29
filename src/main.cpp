@@ -158,8 +158,6 @@ void createApple(){
 void gameOver(){
   delay(200);
 
-  led.clearDisplay(0);
-
   for(int i = 7; i >= 0; i--){
     led.setRow(0, i, B11111111);
     delay(100);
