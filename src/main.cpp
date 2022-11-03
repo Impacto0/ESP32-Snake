@@ -63,7 +63,7 @@ struct Cords{ // struct z kordynatami (wiersz i kolumna)
 
 // dane wensza rzecznego
 Cords head; // głowa
-Cords body[64]; // częsci ciała
+Cords body[65]; // częsci ciała
 int len; // długość
 
 // jabłko
@@ -173,7 +173,7 @@ void gameOver(){
   body[0].row = 5;
   body[1].col = 4;
   body[1].row = 4;
-  for(int i = 2; i < 63; i++){
+  for(int i = 2; i < 65; i++){
     body[i].col = -1;
     body[i].row = -1;
   }
